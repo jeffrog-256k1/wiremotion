@@ -1,0 +1,6 @@
+node_modules
+dist
+assets
+renders
+test-results
+package-lock.json

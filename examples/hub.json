@@ -1,0 +1,21 @@
+{
+  "version": 1,
+  "title": "Everything, connected.",
+  "subtitle": "A fictional workspace with a shared center.",
+  "layout": "hub",
+  "theme": "light",
+  "accent": "#c33e23",
+  "nodes": [
+    { "id": "core", "label": "Workspace", "detail": "A place to make things" },
+    { "id": "notes", "label": "Notes", "detail": "Keep the thought" },
+    { "id": "files", "label": "Files", "detail": "Find the material" },
+    { "id": "tasks", "label": "Tasks", "detail": "Move it forward" },
+    { "id": "people", "label": "People", "detail": "Build together" }
+  ],
+  "edges": [
+    { "from": "core", "to": "notes" },
+    { "from": "core", "to": "files" },
+    { "from": "core", "to": "tasks" },
+    { "from": "people", "to": "core" }
+  ]
+}

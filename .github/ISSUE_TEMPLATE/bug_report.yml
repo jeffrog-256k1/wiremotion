@@ -1,0 +1,20 @@
+name: Bug report
+description: Report a rendering, export, or setup problem.
+body:
+  - type: textarea
+    id: behavior
+    attributes:
+      label: What happened?
+      description: Include expected and actual behavior.
+    validations:
+      required: true
+  - type: textarea
+    id: example
+    attributes:
+      label: Small example JSON
+      description: Use fictional data only. Remove credentials and private information.
+      render: json
+  - type: input
+    id: environment
+    attributes:
+      label: Browser / OS / Node version

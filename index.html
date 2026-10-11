@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Turn small JSON diagrams into schematic motion GIFs. A local-first, open-source canvas for your README."
+    />
+    <meta name="theme-color" content="#0b0e11" />
+    <link rel="icon" type="image/svg+xml" href="./favicon.svg" />
+    <title>Wiremotion — Make the connection visible.</title>
+  </head>
+  <body>
+    <header class="topbar">
+      <a class="brand" href="./" aria-label="Wiremotion home"
+        ><span class="brand-mark" aria-hidden="true">W</span> wiremotion<span class="version"
+          >/ 0.1</span
+        ></a
+      >
+      <nav aria-label="Resources">
+        <a
+          href="https://github.com/jeffrog-256k1/wiremotion#readme"
+          target="_blank"
+          rel="noreferrer"
+          >Documentation ↗</a
+        ><a
+          class="repo-link"
+          href="https://github.com/jeffrog-256k1/wiremotion"
+          target="_blank"
+          rel="noreferrer"
+          >GitHub ↗</a
+        >
+      </nav>
+    </header>
+    <main>
+      <section class="intro" aria-labelledby="headline">
+        <div>
+          <p class="eyebrow"><span class="signal-dot"></span> DIAGRAMS, IN MOTION.</p>
+          <h1 id="headline">Make the connection<br /><em>visible.</em></h1>
+        </div>
+        <div class="intro-note">
+          <p>
+            Small JSON. Moving signals.<br />
+            A diagram worth putting in your README.
+          </p>
+          <span class="tag">NO ACCOUNT</span><span class="tag">LOCAL EXPORT</span>
+        </div>
+      </section>
+      <div class="workspace">
+        <section class="editor-panel" aria-labelledby="source-title">
+          <div class="panel-title">
+            <h2 id="source-title">01 / SOURCE</h2>
+            <span>JSON</span>
+          </div>
+          <div class="example-row">
+            <label for="example">Start with</label
+            ><select id="example">
+              <option value="pipeline">01 — Pipeline</option>
+              <option value="branch">02 — Branch</option>
+              <option value="hub">03 — Hub</option>
+            </select>
+          </div>
+          <label class="sr-only" for="editor">Diagram JSON</label>
+          <textarea
+            id="editor"
+            spellcheck="false"
+            autocapitalize="off"
+            autocomplete="off"
+            aria-describedby="input-state"
+            wrap="off"
+          ></textarea>
+          <div class="editor-status">
+            <span id="input-state" role="status">Ready</span><span id="byte-count"></span>
+          </div>
+          <div id="error" role="alert" hidden></div>
+          <div class="editor-actions">
+            <button id="format">Format JSON</button><button id="save-json">Save JSON ↓</button>
+          </div>
+        </section>
+        <section class="output-panel" aria-labelledby="preview-title">
+          <div class="panel-title">
+            <h2 id="preview-title">02 / LIVE CANVAS</h2>
+            <div class="theme-controls" aria-label="Diagram theme">
+              <button id="dark" aria-pressed="true">Dark</button
+              ><button id="light" aria-pressed="false">Light</button>
+            </div>
+          </div>
+          <div class="canvas-wrap">
+            <canvas
+              id="canvas"
+              width="1280"
+              height="720"
+              aria-label="Animated diagram preview"
+            ></canvas>
+          </div>
+          <div class="transport">
+            <button id="play" aria-label="Pause animation">Ⅱ Pause</button
+            ><span id="frame-time">00.00 / 06.00</span
+            ><span id="diagram-meta">3 NODES · 2 CONNECTIONS</span>
+          </div>
+          <div class="export-section">
+            <div>
+              <p class="eyebrow">READY FOR YOUR README</p>
+              <h3>Draw it. Loop it. Ship it.</h3>
+              <p class="export-note">GIF + a still frame. Everything stays in your browser.</p>
+            </div>
+            <div class="export-actions">
+              <button class="primary" id="export-gif">Export GIF <span>↗</span></button
+              ><button id="export-png">Save PNG ↓</button>
+            </div>
+          </div>
+          <div class="progress-row" id="progress-row" hidden>
+            <label for="progress" id="export-status">Rendering…</label
+            ><progress id="progress" max="100" value="0"></progress
+            ><button id="cancel">Cancel</button>
+          </div>
+          <p class="export-result" id="export-result" role="status"></p>
+          <div class="snippet-row">
+            <span>Embed motion with a still-image fallback.</span
+            ><button id="copy">Copy README snippet ↗</button>
+          </div>
+        </section>
+      </div>
+      <section class="notes" aria-label="How it works">
+        <article>
+          <span>01 / DEFINE</span>
+          <h3>Give your idea a shape.</h3>
+          <p>Pick a template. Edit labels, connections, and the order of the signal.</p>
+        </article>
+        <article>
+          <span>02 / MAKE IT YOURS</span>
+          <h3>A little structure. A lot of character.</h3>
+          <p>Halftone fields, precise wiring, and a single accent. Dark or light.</p>
+        </article>
+        <article>
+          <span>03 / TAKE IT WITH YOU</span>
+          <h3>Your files. Your canvas.</h3>
+          <p>No uploads, API keys, or watermarked exports. Open source, under MIT.</p>
+        </article>
+      </section>
+    </main>
+    <footer>
+      <a href="https://leejungjae.app" target="_blank" rel="noreferrer"
+        >A small tool by jeffrog-256k1 ↗</a
+      ><span>DOT / LINE / TYPE</span
+      ><a href="https://github.com/jeffrog-256k1/wiremotion/issues" target="_blank" rel="noreferrer"
+        >Feedback ↗</a
+      >
+    </footer>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>

@@ -1,0 +1,31 @@
+{
+  "name": "@jeffrog-256k1/wiremotion",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "JSON to schematic motion graphics. Local GIF and PNG exports for your README.",
+  "license": "MIT",
+  "engines": {
+    "node": ">=22.12.0"
+  },
+  "scripts": {
+    "dev": "vite --host 127.0.0.1 --port 4317 --strictPort",
+    "build": "tsc --noEmit && vite build",
+    "preview": "vite preview --host 127.0.0.1 --port 4317 --strictPort",
+    "test": "node --experimental-strip-types --test tests/*.test.ts",
+    "test:browser": "node scripts/test-browser.mjs",
+    "render": "node scripts/render.mjs",
+    "format": "prettier --write .",
+    "format:check": "prettier --check ."
+  },
+  "dependencies": {
+    "gifenc": "1.0.3"
+  },
+  "devDependencies": {
+    "@types/node": "22.20.5",
+    "playwright": "1.64.0",
+    "prettier": "3.9.10",
+    "typescript": "5.9.3",
+    "vite": "8.3.4"
+  }
+}

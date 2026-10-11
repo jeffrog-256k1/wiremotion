@@ -1,0 +1,19 @@
+{
+  "version": 1,
+  "title": "One signal. Many possibilities.",
+  "subtitle": "A fictional content pipeline, drawn as a circuit.",
+  "layout": "branch",
+  "theme": "dark",
+  "accent": "#c2f970",
+  "nodes": [
+    { "id": "source", "label": "Source", "detail": "One original idea" },
+    { "id": "article", "label": "Article", "detail": "Go deeper" },
+    { "id": "video", "label": "Video", "detail": "Show the process" },
+    { "id": "demo", "label": "Demo", "detail": "Make it tangible" }
+  ],
+  "edges": [
+    { "from": "source", "to": "article", "label": "write" },
+    { "from": "source", "to": "video", "label": "record" },
+    { "from": "source", "to": "demo", "label": "build" }
+  ]
+}

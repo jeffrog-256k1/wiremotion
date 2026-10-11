@@ -1,0 +1,21 @@
+{
+  "version": 1,
+  "title": "From idea to orbit.",
+  "subtitle": "A small system. A clear direction.",
+  "layout": "pipeline",
+  "theme": "dark",
+  "accent": "#ff5938",
+  "duration": 6,
+  "width": 1280,
+  "seed": 7,
+  "nodes": [
+    { "id": "capture", "label": "Capture", "detail": "Start with a signal" },
+    { "id": "transform", "label": "Transform", "detail": "Give the idea a shape" },
+    { "id": "ship", "label": "Ship", "detail": "Put it in the world" }
+  ],
+  "edges": [
+    { "from": "capture", "to": "transform", "label": "refine" },
+    { "from": "transform", "to": "ship", "label": "release" }
+  ],
+  "sequence": ["capture", "transform", "ship"]
+}

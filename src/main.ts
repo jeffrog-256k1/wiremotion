@@ -2,10 +2,20 @@ import './style.css';
 import pipeline from '../examples/pipeline.json';
 import branch from '../examples/branch.json';
 import hub from '../examples/hub.json';
-import { parseDiagram, validateDiagram, type Diagram } from './schema.ts';
+import { DiagramError, parseDiagram, validateDiagram, type Diagram } from './schema.ts';
 import { drawDiagram } from './renderer.ts';
 import { exportDiagram, readmeSnippet } from './export.ts';
 
+import {
+  initialLanguage,
+  isLanguage,
+  applyLanguage,
+  translate,
+  type MessageKey,
+  type MessageParams,
+} from './i18n.ts';
+let language = initialLanguage();
+const t = (key: MessageKey, params: MessageParams = {}) => translate(language, key, params);
 const el = <T extends HTMLElement>(id: string) => document.getElementById(id) as T;
 const editor = el<HTMLTextAreaElement>('editor'),
   canvas = el<HTMLCanvasElement>('canvas'),
@@ -20,6 +30,7 @@ let diagram = validateDiagram(pipeline),
   busy = false;
 let aborter: AbortController | undefined;
 const controls = [
+  'language',
   'example',
   'editor',
   'format',
@@ -31,6 +42,32 @@ const controls = [
   'copy',
 ];
 const result = el('export-result');
+let resultMessage: { key: MessageKey; params: MessageParams } | undefined;
+function showResult(key?: MessageKey, params: MessageParams = {}) {
+  resultMessage = key ? { key, params } : undefined;
+  result.textContent = key ? t(key, params) : '';
+}
+function setLanguage() {
+  applyLanguage(language);
+  el<HTMLSelectElement>('language').value = language;
+  playLabel();
+  update();
+  if (resultMessage) showResult(resultMessage.key, resultMessage.params);
+}
+el<HTMLSelectElement>('language').onchange = (event) => {
+  const selected = (event.target as HTMLSelectElement).value;
+  if (!isLanguage(selected)) return;
+  language = selected;
+  try {
+    localStorage.setItem('wiremotion-language', language);
+  } catch {
+    /* Optional preference only. */
+  }
+  const url = new URL(location.href);
+  url.searchParams.set('lang', language);
+  history.replaceState(null, '', url);
+  setLanguage();
+};
 
 function availability() {
   for (const id of controls)
@@ -39,7 +76,7 @@ function availability() {
 }
 function update() {
   el('byte-count').textContent =
-    `${new TextEncoder().encode(editor.value).length.toLocaleString()} B`;
+    `${new TextEncoder().encode(editor.value).length.toLocaleString(language)} B`;
   try {
     const next = parseDiagram(editor.value);
     diagram = next;
@@ -51,9 +88,11 @@ function update() {
       `${diagram.title}. ${diagram.nodes.map((n) => n.label).join(' → ')}.`,
     );
     el('error').hidden = true;
-    el('input-state').textContent = '● Valid diagram';
-    el('diagram-meta').textContent =
-      `${diagram.nodes.length} NODES · ${diagram.edges.length} CONNECTIONS`;
+    el('input-state').textContent = t('valid');
+    el('diagram-meta').textContent = t('diagramMeta', {
+      nodes: diagram.nodes.length,
+      edges: diagram.edges.length,
+    });
     el('dark').setAttribute('aria-pressed', String(diagram.theme === 'dark'));
     el('light').setAttribute('aria-pressed', String(diagram.theme === 'light'));
     time %= diagram.duration;
@@ -61,8 +100,9 @@ function update() {
   } catch (error) {
     valid = false;
     el('error').hidden = false;
-    el('error').textContent = (error as Error).message;
-    el('input-state').textContent = 'Last valid preview shown';
+    el('error').textContent =
+      error instanceof DiagramError ? t(error.code, error.params) : t('unknownError');
+    el('input-state').textContent = t('lastValid');
   }
   availability();
 }
@@ -71,7 +111,7 @@ function load(value: unknown) {
   editor.scrollTop = 0;
   time = diagram.duration * 0.38;
   update();
-  result.textContent = '';
+  showResult();
 }
 editor.addEventListener('input', update);
 el<HTMLSelectElement>('example').onchange = (event) =>
@@ -98,8 +138,8 @@ el('format').onclick = () => {
   else update();
 };
 function playLabel() {
-  el('play').textContent = playing ? 'Ⅱ Pause' : '▷ Play';
-  el('play').setAttribute('aria-label', playing ? 'Pause animation' : 'Play animation');
+  el('play').textContent = t(playing ? 'pause' : 'play');
+  el('play').setAttribute('aria-label', t(playing ? 'pauseAria' : 'playAria'));
 }
 el('play').onclick = () => {
   playing = !playing;
@@ -141,18 +181,17 @@ el('export-png').onclick = () => {
   still.toBlob((blob) => {
     if (blob) {
       download(blob, 'wiremotion.png');
-      result.textContent = 'Still frame saved. Use it as your reduced-motion fallback.';
+      showResult('pngSaved');
     }
   }, 'image/png');
 };
 el('copy').onclick = async () => {
   try {
     await navigator.clipboard.writeText(readmeSnippet());
-    result.textContent =
-      'README snippet copied. Save both exports in your repository’s assets folder.';
+    showResult('copied');
   } catch {
     download(new Blob([readmeSnippet()], { type: 'text/markdown' }), 'wiremotion-embed.md');
-    result.textContent = 'Snippet saved as a Markdown file.';
+    showResult('snippetSaved');
   }
 };
 el('cancel').onclick = () => aborter?.abort();
@@ -160,7 +199,8 @@ el('export-gif').onclick = async () => {
   busy = true;
   availability();
   el('progress-row').hidden = false;
-  result.textContent = '';
+  showResult();
+  el('export-status').textContent = t('rendering', { percent: 0 });
   aborter = new AbortController();
   el<HTMLProgressElement>('progress').value = 0;
   try {
@@ -168,14 +208,17 @@ el('export-gif').onclick = async () => {
       diagram,
       (value) => {
         el<HTMLProgressElement>('progress').value = value * 100;
-        el('export-status').textContent = `Rendering ${Math.round(value * 100)}%`;
+        el('export-status').textContent = t('rendering', { percent: Math.round(value * 100) });
       },
       aborter.signal,
     );
     download(new Blob([exported.gif], { type: 'image/gif' }), 'wiremotion.gif');
-    result.textContent = `GIF saved · ${(exported.gif.byteLength / 1048576).toFixed(2)} MiB · ${diagram.duration}s loop. Save PNG for a still fallback.`;
+    showResult('gifSaved', {
+      size: (exported.gif.byteLength / 1048576).toFixed(2),
+      duration: diagram.duration,
+    });
   } catch (error) {
-    result.textContent = (error as Error).message;
+    showResult((error as Error).message === 'Export cancelled.' ? 'cancelled' : 'exportFailed');
   } finally {
     busy = false;
     availability();
@@ -216,5 +259,5 @@ window.wiremotion = {
   },
 };
 load(pipeline);
-playLabel();
+setLanguage();
 requestAnimationFrame(frame);

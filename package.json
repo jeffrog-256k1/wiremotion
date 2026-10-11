@@ -1,6 +1,6 @@
 {
   "name": "@jeffrog-256k1/wiremotion",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "private": true,
   "type": "module",
   "description": "JSON to schematic motion graphics. Local GIF and PNG exports for your README.",

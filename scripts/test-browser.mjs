@@ -111,6 +111,90 @@ try {
   await page.setViewportSize({ width: 390, height: 844 });
   await page.screenshot({ path: 'test-results/mobile.png', fullPage: true });
   assert(!(await page.evaluate(() => document.documentElement.scrollWidth > innerWidth)));
+  // Language changes preserve the exact edited source, including invalid drafts.
+  const edited = JSON.stringify(
+    { ...JSON.parse(original), title: 'Custom <title> · 나의 도식' },
+    null,
+    4,
+  );
+  const localized = [
+    ['en', 'Save PNG ↓', 'Invalid JSON.', 'Play animation'],
+    ['ko', 'PNG 저장 ↓', 'JSON 형식 오류', '애니메이션 재생'],
+    ['zh-CN', '保存 PNG ↓', 'JSON 格式无效', '播放动画'],
+    ['ja', 'PNG を保存 ↓', 'JSON の形式が無効', 'アニメーションを再生'],
+    ['es', 'Guardar PNG ↓', 'JSON no válido', 'Reproducir animación'],
+  ];
+  await page.locator('#editor').fill(edited);
+  const unchangedFrame = createHash('sha256')
+    .update(await page.locator('#canvas').evaluate((canvas) => canvas.toDataURL()))
+    .digest('hex');
+  for (const [locale, pngLabel, invalidMessage, playLabel] of localized) {
+    await page.selectOption('#language', locale);
+    assert.equal(await page.locator('html').getAttribute('lang'), locale);
+    assert.equal(await page.locator('#editor').inputValue(), edited);
+    assert.equal(
+      createHash('sha256')
+        .update(await page.locator('#canvas').evaluate((canvas) => canvas.toDataURL()))
+        .digest('hex'),
+      unchangedFrame,
+      `${locale}: changing UI language must preserve the exported artwork`,
+    );
+    assert.equal(await page.locator('#export-png').textContent(), pngLabel);
+    assert.equal(await page.locator('#play').getAttribute('aria-label'), playLabel);
+    assert(
+      (await page.locator('#docs').getAttribute('href')).endsWith(
+        `README${locale === 'en' ? '' : '.' + locale}.md`,
+      ),
+    );
+    await page.locator('#editor').fill('{');
+    assert((await page.locator('#error').textContent()).startsWith(invalidMessage));
+    assert(await page.locator('#export-gif').isDisabled());
+    await page.selectOption('#language', locale === 'en' ? 'ko' : 'en');
+    assert.equal(await page.locator('#editor').inputValue(), '{');
+    await page.selectOption('#language', locale);
+    assert((await page.locator('#error').textContent()).startsWith(invalidMessage));
+    await page.locator('#editor').fill(edited);
+    await page.setViewportSize({ width: 320, height: 844 });
+    assert(
+      !(await page.evaluate(() => document.documentElement.scrollWidth > innerWidth)),
+      `${locale} mobile overflow`,
+    );
+    await page.screenshot({ path: `test-results/mobile-${locale}.png`, fullPage: true });
+  }
+  // A non-English export uses the same renderer and downloads successfully.
+  const localizedPng = page.waitForEvent('download');
+  await page.click('#export-png');
+  await (await localizedPng).saveAs('test-results/export-es.png');
+  assert((await page.locator('#export-result').textContent()).startsWith('Imagen fija guardada.'));
+  await page.selectOption('#language', 'ja');
+  assert((await page.locator('#export-result').textContent()).startsWith('静止画を保存'));
+  await page.click('#export-gif');
+  assert(await page.locator('#language').isDisabled());
+  await page.click('#cancel');
+  await page.waitForFunction(() =>
+    document.getElementById('export-result').textContent.includes('キャンセル'),
+  );
+  assert(await page.locator('#language').isEnabled());
+  await page.goto(server.resolvedUrls.local[0]);
+  assert.equal(await page.locator('#language').inputValue(), 'ja'); // Stored preference.
+  assert.notEqual(await page.locator('#editor').inputValue(), edited); // Diagram was not saved.
+  await page.goto(server.resolvedUrls.local[0] + '?lang=ko');
+  assert.equal(await page.locator('#language').inputValue(), 'ko'); // URL wins.
+  const noStorage = await browser.newPage();
+  noStorage.on('pageerror', (error) => errors.push(error.message));
+  await noStorage.addInitScript(() =>
+    Object.defineProperty(window, 'localStorage', {
+      get() {
+        throw new Error('Storage blocked');
+      },
+    }),
+  );
+  await noStorage.goto(server.resolvedUrls.local[0] + '?lang=unsupported');
+  await noStorage.waitForFunction(() => Boolean(window.wiremotion));
+  assert.equal(await noStorage.locator('#language').inputValue(), 'en');
+  await noStorage.selectOption('#language', 'zh-CN');
+  assert.equal(await noStorage.locator('html').getAttribute('lang'), 'zh-CN');
+  await noStorage.close();
   assert.deepEqual(errors, []);
   assert(
     requests.every(
@@ -127,6 +211,9 @@ try {
     cancellation: true,
     mobileOverflow: false,
     externalRequests: 0,
+    languages: localized.map(([locale]) => locale),
+    languagePreservesDraft: true,
+    languageStorageOptional: true,
   };
   await writeFile('test-results/verification.json', JSON.stringify(receipt, null, 2));
   console.log(JSON.stringify(receipt));

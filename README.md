@@ -1,8 +1,10 @@
 # Wiremotion
 
+[English](README.md) · [한국어](README.ko.md) · [简体中文](README.zh-CN.md) · [日本語](README.ja.md) · [Español](README.es.md)
+
 **Turn small JSON diagrams into schematic motion GIFs for your README.**
 
-[Open the playground](https://jeffrog-256k1.github.io/wiremotion/) · [한국어](README.ko.md) · [Configuration](docs/configuration.md) · [Examples](examples)
+[Open the playground](https://jeffrog-256k1.github.io/wiremotion/) · [Configuration](docs/configuration.md) · [Examples](examples)
 
 <picture>
   <source media="(prefers-reduced-motion: reduce)" srcset="assets/pipeline.png">
@@ -20,7 +22,13 @@ Give a workflow some motion: halftone fields, precise wiring, traveling signals,
 3. Choose a theme, then **Export GIF** and **Save PNG**.
 4. Copy the README snippet and place both images in your repository's `assets/` folder.
 
-Invalid JSON keeps the last valid preview visible and disables export. Export runs in a worker and can be cancelled. Nothing is auto-saved: download your JSON before leaving the page.
+Invalid JSON keeps the last valid preview visible and disables export. Export runs in a worker and can be cancelled. Diagram content is not auto-saved: download your JSON before leaving the page. Only your language preference is saved locally.
+
+## Five languages
+
+The playground and this README are available in **English, Korean, Simplified Chinese, Japanese, and Spanish**. Use the language menu at the top of the playground or share a link with `?lang=en`, `?lang=ko`, `?lang=zh-CN`, `?lang=ja`, or `?lang=es`.
+
+Switching language preserves your JSON, theme, and diagram. Buttons, validation errors, accessibility labels, and export status are translated. Example content, technical artwork captions, JSON keys, CLI output, and the advanced configuration reference remain in English. You can write your own diagram labels in any supported system font.
 
 ## Three small templates
 

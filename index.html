@@ -13,16 +13,18 @@
   </head>
   <body>
     <header class="topbar">
-      <a class="brand" href="./" aria-label="Wiremotion home"
+      <a class="brand" href="./" aria-label="Wiremotion home" data-i18n-aria="home"
         ><span class="brand-mark" aria-hidden="true">W</span> wiremotion<span class="version"
           >/ 0.1</span
         ></a
       >
-      <nav aria-label="Resources">
+      <nav aria-label="Resources" data-i18n-aria="resources">
         <a
+          id="docs"
           href="https://github.com/jeffrog-256k1/wiremotion#readme"
           target="_blank"
           rel="noreferrer"
+          data-i18n="docs"
           >Documentation ↗</a
         ><a
           class="repo-link"
@@ -31,37 +33,53 @@
           rel="noreferrer"
           >GitHub ↗</a
         >
+        <label class="sr-only" for="language" data-i18n="language">Language</label>
+        <select id="language">
+          <option value="en" lang="en">English</option>
+          <option value="ko" lang="ko">한국어</option>
+          <option value="zh-CN" lang="zh-CN">简体中文</option>
+          <option value="ja" lang="ja">日本語</option>
+          <option value="es" lang="es">Español</option>
+        </select>
       </nav>
     </header>
     <main>
       <section class="intro" aria-labelledby="headline">
         <div>
-          <p class="eyebrow"><span class="signal-dot"></span> DIAGRAMS, IN MOTION.</p>
-          <h1 id="headline">Make the connection<br /><em>visible.</em></h1>
+          <p class="eyebrow">
+            <span class="signal-dot" aria-hidden="true"></span
+            ><span data-i18n="eyebrow">DIAGRAMS, IN MOTION.</span>
+          </p>
+          <h1 id="headline">
+            <span data-i18n="headline">Make the connection</span><br /><em
+              data-i18n="headlineAccent"
+              >visible.</em
+            >
+          </h1>
         </div>
         <div class="intro-note">
-          <p>
-            Small JSON. Moving signals.<br />
-            A diagram worth putting in your README.
+          <p data-i18n="intro">
+            Small JSON. Moving signals. A diagram worth putting in your README.
           </p>
-          <span class="tag">NO ACCOUNT</span><span class="tag">LOCAL EXPORT</span>
+          <span class="tag" data-i18n="noAccount">NO ACCOUNT</span
+          ><span class="tag" data-i18n="localExport">LOCAL EXPORT</span>
         </div>
       </section>
       <div class="workspace">
         <section class="editor-panel" aria-labelledby="source-title">
           <div class="panel-title">
-            <h2 id="source-title">01 / SOURCE</h2>
+            <h2 id="source-title" data-i18n="source">01 / SOURCE</h2>
             <span>JSON</span>
           </div>
           <div class="example-row">
-            <label for="example">Start with</label
+            <label for="example" data-i18n="startWith">Start with</label
             ><select id="example">
-              <option value="pipeline">01 — Pipeline</option>
-              <option value="branch">02 — Branch</option>
-              <option value="hub">03 — Hub</option>
+              <option value="pipeline" data-i18n="pipeline">01 — Pipeline</option>
+              <option value="branch" data-i18n="branch">02 — Branch</option>
+              <option value="hub" data-i18n="hub">03 — Hub</option>
             </select>
           </div>
-          <label class="sr-only" for="editor">Diagram JSON</label>
+          <label class="sr-only" for="editor" data-i18n="editor">Diagram JSON</label>
           <textarea
             id="editor"
             spellcheck="false"
@@ -75,15 +93,16 @@
           </div>
           <div id="error" role="alert" hidden></div>
           <div class="editor-actions">
-            <button id="format">Format JSON</button><button id="save-json">Save JSON ↓</button>
+            <button id="format" data-i18n="format">Format JSON</button
+            ><button id="save-json" data-i18n="saveJson">Save JSON ↓</button>
           </div>
         </section>
         <section class="output-panel" aria-labelledby="preview-title">
           <div class="panel-title">
-            <h2 id="preview-title">02 / LIVE CANVAS</h2>
-            <div class="theme-controls" aria-label="Diagram theme">
-              <button id="dark" aria-pressed="true">Dark</button
-              ><button id="light" aria-pressed="false">Light</button>
+            <h2 id="preview-title" data-i18n="preview">02 / LIVE CANVAS</h2>
+            <div class="theme-controls" aria-label="Diagram theme" data-i18n-aria="theme">
+              <button id="dark" aria-pressed="true" data-i18n="dark">Dark</button
+              ><button id="light" aria-pressed="false" data-i18n="light">Light</button>
             </div>
           </div>
           <div class="canvas-wrap">
@@ -101,50 +120,62 @@
           </div>
           <div class="export-section">
             <div>
-              <p class="eyebrow">READY FOR YOUR README</p>
-              <h3>Draw it. Loop it. Ship it.</h3>
-              <p class="export-note">GIF + a still frame. Everything stays in your browser.</p>
+              <p class="eyebrow" data-i18n="ready">READY FOR YOUR README</p>
+              <h3 data-i18n="exportHeading">Draw it. Loop it. Ship it.</h3>
+              <p class="export-note" data-i18n="exportNote">
+                GIF + a still frame. Everything stays in your browser.
+              </p>
             </div>
             <div class="export-actions">
-              <button class="primary" id="export-gif">Export GIF <span>↗</span></button
-              ><button id="export-png">Save PNG ↓</button>
+              <button class="primary" id="export-gif" data-i18n="exportGif">Export GIF ↗</button
+              ><button id="export-png" data-i18n="savePng">Save PNG ↓</button>
             </div>
           </div>
           <div class="progress-row" id="progress-row" hidden>
             <label for="progress" id="export-status">Rendering…</label
             ><progress id="progress" max="100" value="0"></progress
-            ><button id="cancel">Cancel</button>
+            ><button id="cancel" data-i18n="cancel">Cancel</button>
           </div>
           <p class="export-result" id="export-result" role="status"></p>
           <div class="snippet-row">
-            <span>Embed motion with a still-image fallback.</span
-            ><button id="copy">Copy README snippet ↗</button>
+            <span data-i18n="embedNote">Embed motion with a still-image fallback.</span
+            ><button id="copy" data-i18n="copy">Copy README snippet ↗</button>
           </div>
         </section>
       </div>
-      <section class="notes" aria-label="How it works">
+      <section class="notes" aria-label="How it works" data-i18n-aria="how">
         <article>
-          <span>01 / DEFINE</span>
-          <h3>Give your idea a shape.</h3>
-          <p>Pick a template. Edit labels, connections, and the order of the signal.</p>
+          <span data-i18n="step1">01 / DEFINE</span>
+          <h3 data-i18n="step1Title">Give your idea a shape.</h3>
+          <p data-i18n="step1Body">
+            Pick a template. Edit labels, connections, and the order of the signal.
+          </p>
         </article>
         <article>
-          <span>02 / MAKE IT YOURS</span>
-          <h3>A little structure. A lot of character.</h3>
-          <p>Halftone fields, precise wiring, and a single accent. Dark or light.</p>
+          <span data-i18n="step2">02 / MAKE IT YOURS</span>
+          <h3 data-i18n="step2Title">A little structure. A lot of character.</h3>
+          <p data-i18n="step2Body">
+            Halftone fields, precise wiring, and a single accent. Dark or light.
+          </p>
         </article>
         <article>
-          <span>03 / TAKE IT WITH YOU</span>
-          <h3>Your files. Your canvas.</h3>
-          <p>No uploads, API keys, or watermarked exports. Open source, under MIT.</p>
+          <span data-i18n="step3">03 / TAKE IT WITH YOU</span>
+          <h3 data-i18n="step3Title">Your files. Your canvas.</h3>
+          <p data-i18n="step3Body">
+            No uploads, API keys, or watermarked exports. Open source, under MIT.
+          </p>
         </article>
       </section>
     </main>
     <footer>
-      <a href="https://leejungjae.app" target="_blank" rel="noreferrer"
+      <a href="https://leejungjae.app" target="_blank" rel="noreferrer" data-i18n="author"
         >A small tool by jeffrog-256k1 ↗</a
       ><span>DOT / LINE / TYPE</span
-      ><a href="https://github.com/jeffrog-256k1/wiremotion/issues" target="_blank" rel="noreferrer"
+      ><a
+        href="https://github.com/jeffrog-256k1/wiremotion/issues"
+        target="_blank"
+        rel="noreferrer"
+        data-i18n="feedback"
         >Feedback ↗</a
       >
     </footer>

@@ -527,3 +527,77 @@ footer {
     transition: none !important;
   }
 }
+
+/* Language controls and longer translated labels. */
+.topbar nav {
+  align-items: center;
+  gap: 20px;
+}
+#language {
+  color: var(--fg);
+  background: var(--bg);
+  border: 1px solid var(--line);
+  padding: 7px;
+  max-width: 110px;
+  font: 12px var(--mono);
+}
+.intro > div {
+  min-width: 0;
+}
+.intro-note {
+  max-width: 330px;
+}
+h1 {
+  overflow-wrap: anywhere;
+}
+html:not([lang='en']) h1 {
+  letter-spacing: -1.5px;
+  line-height: 1.12;
+}
+.panel-title {
+  padding-top: 10px;
+  padding-bottom: 10px;
+  flex-wrap: wrap;
+}
+.theme-controls {
+  flex-shrink: 0;
+}
+@media (max-width: 700px) {
+  .topbar {
+    height: auto;
+    min-height: 66px;
+    padding-top: 12px;
+    padding-bottom: 12px;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  .topbar nav {
+    gap: 12px;
+  }
+  .brand {
+    font-size: 20px;
+    gap: 8px;
+  }
+  .version {
+    display: none;
+  }
+  #language {
+    max-width: 100px;
+    font-size: 11px;
+  }
+  .intro-note {
+    max-width: none;
+  }
+  h1 {
+    font-size: clamp(34px, 10vw, 48px);
+  }
+  .transport {
+    flex-wrap: wrap;
+  }
+  .export-actions {
+    flex-wrap: wrap;
+  }
+  .export-actions button {
+    min-width: 130px;
+  }
+}

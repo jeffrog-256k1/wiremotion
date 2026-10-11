@@ -86,6 +86,8 @@ function pointAt(points: Point[], phase: number): Point {
 }
 
 export function drawDiagram(ctx: Context, d: Diagram, seconds: number, width = d.width): void {
+  // UI language must not change Canvas font fallback for user-authored artwork.
+  if ('lang' in ctx.canvas) ctx.canvas.lang = 'en';
   const t = mod(seconds, d.duration) / d.duration;
   const dark = d.theme === 'dark';
   const p = {
